@@ -24,6 +24,16 @@ export class Server {
 
     this.app.use(express.static(this.public_path));
 
+    // ROUTES
+    this.app.get('/api/todos', (req, res)=>{
+      return res.json([
+        {id: 1, text: 'Buy milk', createdAt: new Date()},
+        {id: 2, text: 'Buy bread', createdAt: null},
+        {id: 3, text: 'Buy butter', createdAt: new Date()},
+      ])
+    })
+
+    // SPA
     this.app.get('*', (req, res)=>{
       const filePath = path.join(__dirname, `../../${this.public_path}/index.html`)
       res.sendFile(filePath);
