@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../../data/postgres";
+import { CreateTodoDto } from "../../domain/dtos/todos/create-todo.dto";
 
 export class TodosController {
   public getTodos = async (req: Request, res: Response) => {
@@ -23,11 +24,11 @@ export class TodosController {
   };
 
   public createTodo = async (req: Request, res: Response) => {
-    const { text } = req.body;
-    if (!text) return res.status(400).json({ error: "Text is required" });
+    const [error, createTodoDto] = CreateTodoDto.create(req.body)
 
+    if(error) return res.status(400).json({error});
     const newTodo = await prisma.todo.create({
-      data: { text },
+      data: createTodoDto!,
     });
     return res.json(newTodo);
   };
